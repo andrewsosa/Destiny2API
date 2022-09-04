@@ -1,11 +1,6 @@
-import { expect } from "chai";
-import * as api from "../index.js";
+const { expect } = require("chai");
 
-describe("basic tests", () => {
-  it("should pass", () => {
-    expect(true).to.be.true;
-  });
-});
+const api = require("../src/index.js");
 
 describe("get raid challenges", () => {
   Object.entries(api.RAID_IDS).forEach(([raidName, raidId]) => {
@@ -14,13 +9,5 @@ describe("get raid challenges", () => {
       const name = await api.getRaidChallengeName(client, raidId);
       expect(api.CHALLENGE_NAMES[raidName]).to.contain(name);
     });
-  });
-});
-
-describe("get active lost sector", () => {
-  it("should get active lost sector", async () => {
-    const client = api.makeClient(process.env.BUNGIE_API_KEY);
-    const name = await api.getActiveLostSector(client);
-    expect(name).to.equal("Lost Sector");
   });
 });

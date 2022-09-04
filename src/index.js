@@ -1,13 +1,13 @@
-import axios from "axios";
+const axios = require("axios");
 
-export const RAID_IDS = {
+const RAID_IDS = {
   DSC: 910380154,
   VOG: 3881495763,
   VOTD: 1441982566,
   KF: 1374392663,
 };
 
-export const CHALLENGE_NAMES = {
+const CHALLENGE_NAMES = {
   DSC: [
     "Red Rover", // activityModifierHash:4023623132
     "Copies of Copies", // activityModifierHash:3361897360
@@ -38,7 +38,7 @@ export const CHALLENGE_NAMES = {
   ],
 };
 
-export function makeClient(apiKey) {
+function makeClient() {
   const client = axios.create({
     baseURL: "https://www.bungie.net/Platform/Destiny2",
     headers: { "X-API-Key": process.env.BUNGIE_API_KEY },
@@ -48,7 +48,7 @@ export function makeClient(apiKey) {
   return client;
 }
 
-export async function getRaidChallengeName(client, raidId) {
+async function getRaidChallengeName(client, raidId) {
   // Milestones contain the correct active challenge
   let { data: milestones } = await client.get("/Milestones/");
 
@@ -69,13 +69,9 @@ export async function getRaidChallengeName(client, raidId) {
   return challengeName;
 }
 
-export async function getActiveLostSector(client) {
-  let { data: milestones } = await client.get("/Milestones/");
-
-  // search the milestones to find the right one for the raid ID
-  const milestone = Object.values(milestones).find((el) => {
-    return el?.activities?.find((act) => act?.activityHash === 480864726);
-  });
-
-  return milestone;
-}
+module.exports = {
+  RAID_IDS,
+  CHALLENGE_NAMES,
+  makeClient,
+  getRaidChallengeName,
+};
