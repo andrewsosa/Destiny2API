@@ -38,10 +38,10 @@ const CHALLENGE_NAMES = {
   ],
 };
 
-function makeClient() {
+function makeClient(apiKey) {
   const client = axios.create({
     baseURL: "https://www.bungie.net/Platform/Destiny2",
-    headers: { "X-API-Key": process.env.BUNGIE_API_KEY },
+    headers: { "X-API-Key": apiKey },
     transformResponse: [(data) => JSON.parse(data).Response],
   });
 
