@@ -16,7 +16,7 @@ const CHALLENGE_NAMES = {
   ],
   VOG: [
     "Wait for It...",
-    "The Only Oracle for You",
+    "The Only Oracle For You",
     "Out Of Its Way",
     "Strangers in Time",
     "Ensemble's Refrain",
@@ -28,7 +28,7 @@ const CHALLENGE_NAMES = {
     "Looping Catalyst",
   ],
   KF: [
-    "", // activityModifierHash:1374392663 no active challenge
+    // "", // activityModifierHash:1374392663 no active challenge
     "The Grass Is Always Greener", // activityModifierHash:3577304467
     "Devious Thievery", // activityModifierHash:2159250954
     "Gaze Amaze", // activityModifierHash:2890753840
@@ -57,16 +57,22 @@ async function getRaidChallengeName(client, raidId) {
     return el?.activities?.find((act) => act?.activityHash === raidId);
   });
 
-  // raids can have multiple modifiers, but the first one is the raid challenge
-  const challengeHash = milestone.activities[0].modifierHashes[0];
+  // raids can have multiple activiites (normal, master), and each activity can have
+  // multiple modifiers. find the first one which has a non-empty name, and assume it
+  // is correct.
+  for (const challengeHash of milestone.activities[0].modifierHashes) {
+    let { data: challenge } = await client.get(
+      `/Manifest/DestinyActivityModifierDefinition/${challengeHash}/`
+    );
 
-  let { data: challenge } = await client.get(
-    `/Manifest/DestinyActivityModifierDefinition/${challengeHash}/`
-  );
+    const challengeName = challenge.displayProperties.name;
 
-  const challengeName = challenge.displayProperties.name;
+    if (challengeName) {
+      return challengeName;
+    }
+  }
 
-  return challengeName;
+  return null;
 }
 
 module.exports = {
