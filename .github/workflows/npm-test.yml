@@ -12,7 +12,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: test
 
     strategy:
       matrix:
@@ -29,3 +28,5 @@ jobs:
       - run: npm ci
       - run: npm run build --if-present
       - run: npm test
+        env:
+          BUNGIE_API_KEY: ${{ secrets.BUNGIE_API_KEY }}
